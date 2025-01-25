@@ -1,23 +1,22 @@
-# Employee Manager
+# **Employee Manager**  
 
-## Description
-This is an app with both frontend(NextJs) and backend(NodeJs) to manage employees data.
+## **Description**  
+This is a full-stack application with a **Next.js frontend** and a **Node.js backend** to manage employee data efficiently.
 
-## Features
-Create Employee
-Update Employee
-Delete Employee 
-Search bar to search Employee by typing the prefix of employee's name
-Pagination
-Data Validation while both creating and updating (Database Validation)
+## **Features**  
+- ✅ **Create Employee**  
+- ✅ **Update Employee**  
+- ✅ **Delete Employee**  
+- ✅ **Search bar** to find employees by typing the prefix of their name  
+- ✅ **Pagination** for efficient data handling  
+- ✅ **Data Validation** while both creating and updating employees (Database Validation)  
 
-## Technologies Used
-Backend - ExpressJs (NodeJs Library)
-Frontend - NextJs (ReactJs Library)
-DataBase - MongoDB
-Object Document Mapping Library - Mongoose (To Ineract with DataBase)
-Styling - Tailwind Css (CSS framework)
-UI Library - NextUI (Also known as heroUI)
-Animation Library - Framer motion
-For HTTP requests - axios
-
+## **Technologies Used**  
+- **Backend:** Express.js (Node.js library)  
+- **Frontend:** Next.js (React.js library)  
+- **Database:** MongoDB  
+- **Object Document Mapping (ODM) Library:** Mongoose (to interact with the database)  
+- **Styling:** Tailwind CSS (CSS framework)  
+- **UI Library:** NextUI (also known as HeroUI)  
+- **Animation Library:** Framer Motion  
+- **HTTP Requests:** Axios  
