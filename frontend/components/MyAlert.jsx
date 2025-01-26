@@ -1,7 +1,7 @@
 import React from "react";
 import {Alert} from "@nextui-org/react";
 
-export default function MyAlert({isVisible, handleVisibility, title, description, color, variant}) {
+export default function MyAlert({isVisible, handleAlert, title, description, color, variant}) {
   return (
     <div className="flex flex-col gap-4 absolute top-4 right-2">
       {isVisible && (
@@ -11,7 +11,7 @@ export default function MyAlert({isVisible, handleVisibility, title, description
           isVisible={isVisible}
           title={title}
           variant={variant}
-          onClose={() => handleVisibility(false)}
+          onClose={() => handleAlert({visible: false})}
         />
       )
       }

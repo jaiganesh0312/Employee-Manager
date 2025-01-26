@@ -23,7 +23,7 @@ const fetchData = async (currentPage, keyword) => {
 const postData = async (formData) => {
     
     try {
-        const res = await axios.post("http:/localhost:5000/employees", JSON.stringify(formData, 2));
+        const res = await axios.post("http:/localhost:5000/employees", formData);
         return res.data;
     } catch(error) {
         console.log("Error Creating Resorce", error.message)
@@ -46,10 +46,20 @@ const getById = async(id) => {
         const res = await axios.get(`http:/localhost:5000/employees/${id}`);
         return res.data;
     } catch(error){
-        console.log("Error Creating Resorce", error.message)
+        console.log("Error Creating Resorce", error.message);
+        return null;
+    }
+}
+
+const deleteData = async(id) => {
+    try {
+        const res = await  axios.delete(`http:/localhost:5000/employees/${id}`);
+        return res.data;
+    } catch(error){
+        console.log("Error Deleting Resource", error.message);
         return null;
     }
 }
  
 
-export { fetchData, postData, putData, getById };
+export { fetchData, postData, putData, getById, deleteData };

@@ -4,22 +4,20 @@ import {Form, Input, Button} from "@nextui-org/react";
 import { postData, putData } from "@/util/actions";
 import { redirect } from "next/navigation";
 import MyAlert from "./MyAlert";
+import DeleteModal from "./DeleteModal";
 
 export default function UserForm({formType, id, name, email, role, salary, location, phone}) {
-  const [visible, setVisible] = useState(false);
-  function handleVisibility(value){
-    setVisible(value);
+  const [alert, setAlert] = useState({visible: false});
+  function handleAlert(value){
+    setAlert(value);
   }
   return (
     <Form
       className="w-2/5 m-auto flex flex-col gap-4 mt-4 border-2 bg-green-400 px-10 py-4 rounded-md"
       validationBehavior="native"
-      onReset={
-        console.log("reset done")
-      }
       onSubmit={async (event) => {
         event.preventDefault();
-        let data = Object.fromEntries(new FormData(e.currentTarget));
+        let data = Object.fromEntries(new FormData(event.currentTarget));
         let employee = null;
         if(id){
           employee = await putData(data, id);
@@ -28,11 +26,15 @@ export default function UserForm({formType, id, name, email, role, salary, locat
           employee = await postData(data);
         }
         if(employee !== null){
-          handleVisibility(true);
+          handleAlert({
+            visible: true,
+            message: id ? "Resource Updated Successfully!" : "Resource Created Successfully!"
+          });
           setTimeout(() => {
-            handleVisibility(false);
+            handleAlert({visible: false});
             redirect("/");
-          }, 2000);
+        }, 800);
+        
         }
        
       }}
@@ -41,9 +43,9 @@ export default function UserForm({formType, id, name, email, role, salary, locat
         color="success"
         variant="faded"
         title="Success!"
-        description={`Employee ${id ? 'Updated' : 'Created'} Successfully!`}
-        isVisible={visible}
-        handleVisibility={handleVisibility}
+        description={alert.message}
+        isVisible={alert.visible}
+        handleAlert={handleAlert}
       />
 
       <p className="text-3xl m-auto">{formType} User</p>
@@ -114,13 +116,22 @@ export default function UserForm({formType, id, name, email, role, salary, locat
       />
 
 
-      <div className="flex gap-2">
-        <Button color="primary" type="submit">
-          Submit
-        </Button>
-        <Button type="reset" variant="flat">
-          Reset
-        </Button>
+      <div className="flex justify-between items-center w-full">
+        <div className="flex space-x-2">
+          <Button color="primary" type="submit" isDisabled={alert.visible}>
+            Submit
+          </Button>
+          <Button type="reset" variant="flat" color="default" className="text-black" isDisabled={alert.visible}>
+            Reset
+          </Button>
+        </div>
+        {formType === "Update" && 
+          <DeleteModal 
+            id={id}
+            handleAlert={handleAlert}
+            isDisabled={alert.visible}
+          />
+        }
       </div>
     </Form>
   );
