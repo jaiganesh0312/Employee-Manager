@@ -28,7 +28,7 @@ export default function Home() {
   return (
       <Fragment>
         <div className="flex justify-center gap-6">
-          <SearchInput onValueChange={handleOnChange}/>
+          <SearchInput onValueChange={handleOnChange} isResettable={keyword !== ""}/>
           <Link href={"/create"}>
             <Button
             color="success"
