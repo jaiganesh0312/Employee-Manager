@@ -48,25 +48,72 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
+ 
     const employee = await Employee.create(req.body);
     res.status(200).json(employee);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+
+    if (error._message === 'Employee validation failed') {
+      console.log("failed!!!!")
+      const errorDetails = {};
+
+      for (let field in error.errors) {
+        errorDetails[field] = error.errors[field].message; 
+      }
+
+      return res.status(400).json({
+        error: "Validation failed",
+        details: errorDetails,
+        isInvalid: true
+      });
+    }
+
+   
+    res.status(500).json({
+      error: "Internal server error"
+    });
   }
 });
 
+
+
+
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
+
   try {
-    const employee = await Employee.findByIdAndUpdate(id, req.body);
+   
+    const employee = await Employee.findById(id);
     if (!employee) {
       return res.status(404).json({ message: "Employee not found!" });
     }
-    res.status(200).json(employee);
+
+    Object.assign(employee, req.body); 
+    await employee.validate(); 
+    const updatedEmployee = await employee.save();
+    res.status(200).json(updatedEmployee);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      if (error._message === 'Employee validation failed') {
+        console.log("failed!!!!")
+        const errorDetails = {};
+
+        for (let field in error.errors) {
+          errorDetails[field] = error.errors[field].message; 
+        }
+
+        return res.status(400).json({
+          error: "Validation failed",
+          details: errorDetails,
+          isInvalid: true
+        });
+    }
+
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
+
 
 router.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
