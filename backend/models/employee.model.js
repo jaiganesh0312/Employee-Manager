@@ -1,67 +1,68 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/sequelize");
 
-const EmployeeSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, "Please Enter a Valid Name"],
-        validate: {
-            validator: function (value) {
-              return /^[a-zA-Z\s]+$/.test(value); // Allows only letters and spaces
-            },
-            message: 'Name must contain only letters and spaces',
-        },
-    },
-
-    email: {
-        type: String,
-        required: [true, "Please Enter a Valid Email"],
-        unique: true,
-        validate: {
-            validator: function (value) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); // Simple email regex
-            },
-            message: 'Email is already in use or invalid'
-        }
-    },
-
-    role: {
-        type: String,
-        required: [true, "Please Enter a Valid Role"]
-    },
-
-    salary: {
-        type: String,
-        required: [true, "Please Enter a Valid Salary"],
-        validate: {
-            validator: function (value) {
-              return /^\d+$/.test(value); // Ensures only numeric characters
-            },
-            message: 'Salary must contain only numeric characters',
-        },
-    },
-
-    phone: {
-        type: String,
-        required: [true, "Please Enter a Valid Phone Number"],
-        validate: {
-            validator: function (value) {
-              return /^[1-9]\d{9}$/.test(value); // Ensures the number does not start with 0
-            },
-            message: 'Phone number must be a valid 10-digit number and cannot start with 0',
-        },
-    },
-
-    location: {
-        type: String,
-        required: [true, "Please Enter a valid Location"],
-        validate: {
-            validator: function (value) {
-              return value.trim().length > 0; // Ensures location is not empty or just spaces
-            },
-            message: 'Location cannot be empty',
-        },
+const Employee = sequelize.define("Employee", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: "Name cannot be empty" },
+      len: { args: [3, 50], msg: "Name must be atleast 3 characters" },
+      isAlpha: {msg: "Name must contain only alphabetical characters"}
     }
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: {
+        msg: "Email already exists!"
+    },
+    validate: {
+      isEmail: {msg: 'Invalid Email format'},
+    }
+  },
+  role : {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: "Role cannot be empty" },
+    }
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: "Location cannot be empty" },
+     
+    }
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isValidPhone(value) {
+        if (!/^[1-9]\d{9}$/.test(value)) {
+          throw new Error("Phone number must be exactly 10 digits and cannot start with 0");
+        }
+      }
+    }
+  },
+  salary: {
+    type: DataTypes.STRING, // Storing salary as a STRING
+    allowNull: false,
+    validate: {
+      isValidSalary(value) {
+        if (!/^\d+$/.test(value)) {
+          throw new Error("Salary must contain only numeric characters");
+        }
+      }
+    }
+  }
 });
 
-const Employee = mongoose.model("Employee", EmployeeSchema);
 module.exports = Employee;
